@@ -10,27 +10,33 @@ class Info(object):
     def get_information(cls, db):
         return db.query("SELECT * FROM app ORDER BY name DESC"), db.query("SELECT * FROM auth ORDER BY time DESC")
 
+    @classmethod
+    def add_auth_status(cls, db, number, money, auth_time):
+        db.execute('insert into auth (number, money, auth_time, time) values("%s", "%s", "%s", CURRENT_TIMESTAMP())'%(number, money, auth_time))
 
     @classmethod
-    def add_auth_status(cls, db, number, money, time):
-        return db.execute('insert into auth (number, money, auth_time, time) values("%s", "%s", "%s", CURRENT_TIMESTAMP())'%(number, money, time))
+    def set_auth_status(cls, db, number, mac, username, auth_time):
+        db.execute('UPDATE auth set username="%s", mac="%s", auth_time=%d WHERE number="%s"' % (username, mac, auth_time, number))
 
     @classmethod
-    def set_auth_status(cls, db, number, mac, username):
-        db.execute('UPDATE auth set username="%s", mac="%s", auth_time=auth_time-1 WHERE number="%s"' % (username, mac, number))
+    def get_version(cls, db, app):
+        return db.get('SELECT * FROM app where name="%s"' % app)
 
     @classmethod
-    def get_version(cls, db, app, version):
-        return db.get("SELECT * FROM app where name=%s" % app)
-
+    def set_app_info(cls, db, app, version):
+        db.execute('UPDATE app set version=%f, description="%s", download="%s", time=CURRENT_TIMESTAMP() WHERE name="%s"' % (version, description, download, app))
+    
+    @classmethod
+    def add_app_info(cls, db, app, version, description, download):
+        db.execute('insert into app (name, version, description, download, time) values("%s", "%s", "%s", "%s", CURRENT_TIMESTAMP())'%(app, version, description, download))
 
     @classmethod
     def auth(cls, db,number,mac,username):
         result = db.get("SELECT * FROM auth where number=%s" % number)
         #验证部分
-        print result
         
         if result and result['auth_time'] > 0 and (not result['username'] or result['username'] == username):
+            Info.set_auth_status(db, number, mac, username, result['auth_time']-1)
             return True
         return False
 
@@ -41,17 +47,19 @@ class Manage(object):
         if Info.auth(db,number,mac,username):
             #加密部分
 
-            Info.set_auth_status(db,number,mac,username)
+            
             return '加密密文'
         else:
             return '授权失败'
 
     @classmethod
     def updated(cls,db,app,version):
-        version = Info.get_version(db,app)
+        app = Info.get_version(db,app)
+
         #如果版本高
-        if version:
-            return ['app','version','log','download']
+        if app and app['version'] > version:
+            print '有新版本'
+            return '有新版本'
         else:
             return '已经是最新版本'
 

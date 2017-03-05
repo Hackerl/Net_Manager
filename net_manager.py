@@ -23,6 +23,7 @@ class Application(tornado.web.Application):
             (r"/update", UpdateHandler),
             (r"/admin", ManageHandler),
             (r"/set_app", SetAppHandler),
+            (r"/add_app", AddAppHandler),
             (r"/addauth", AddHandler),
             (r'/login', LoginHandler),
             (r'/logout', LogoutHandler),
@@ -83,7 +84,7 @@ class HomeHandler(BaseHandler):
 #授权
 class AuthHandler(BaseHandler):
     def post(self):
-        number = self.get_argument('number','')
+        number = self.get_argument('number','00000000')
         mac = self.get_argument('mac','')
         username = self.get_argument('username','')
         encrypt = Manage.authorization(self.db,number,mac,username)
@@ -91,10 +92,10 @@ class AuthHandler(BaseHandler):
 
 #获取更新信息
 class UpdateHandler(BaseHandler):
-    def get(self):
+    def post(self):
         app = self.get_argument('name','')
         version = self.get_argument('version','')
-        result = Manage.updated(self.db,app,version)
+        result = Manage.updated(self.db,app,float(version))
         self.write(result)
 
 #添加验证条目
@@ -115,7 +116,17 @@ class SetAppHandler(BaseHandler):
         version = self.get_argument('version',0)
         description = self.get_argument('description','')
         download = self.get_argument('download','')
-        Info.set_app_info(name,version,description,download)
+        Info.set_app_info(self.db, app, version, description, download)
+        
+#添加app信息                   
+class AddAppHandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self):
+        app = self.get_argument('name','')
+        version = self.get_argument('version',0)
+        description = self.get_argument('description','')
+        download = self.get_argument('download','')
+        Info.add_app_info(self.db, app, version, description, download)
 
 #后台主页
 class ManageHandler(BaseHandler):
