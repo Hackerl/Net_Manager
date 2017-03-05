@@ -56,4 +56,11 @@ class Manage(object):
         else:
             return '已经是最新版本'
 
+class Auth(object):
+    @classmethod
+    def authenticate(cls, db, username, password):
+        hashPassword = db.get('SELECT password FROM admin \
+                WHERE username = %s', username)['password']
+        return hashlib.md5(password).hexdigest() == hashPassword
+
 
