@@ -4,12 +4,19 @@ import hashlib
 import time
 import os.path
 import os
+import datetime
 
 class Info(object):
     @classmethod
     def get_information(cls, db):
-        return db.query("SELECT * FROM app ORDER BY name DESC"), db.query("SELECT * FROM auth ORDER BY time DESC")
-
+        app = db.query("SELECT * FROM app ORDER BY name DESC")
+        auths = db.query("SELECT * FROM auth ORDER BY time DESC")
+        data = {'money':db.get("SELECT sum(money) from auth")['sum(money)'],'num':db.get("select count(*) from auth")['count(*)']}
+        for auth in auths:
+            auth.percentage = '%s/%d' % (time.time() - time.mktime(auth.time.timetuple()),  86400*(30 if auth.money==30 else 60))
+        print auths
+        return app, auths ,data
+        
     @classmethod
     def add_auth_status(cls, db, number, money, auth_time):
         db.execute('insert into auth (number, money, auth_time, time) values("%s", "%s", "%s", CURRENT_TIMESTAMP())'%(number, money, auth_time))

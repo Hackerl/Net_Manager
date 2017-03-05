@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-    <title>智谷科技后台管理框架 - WPP - 首页示例四</title>
+    <title>Net Manager</title>
 
     <link rel="shortcut icon" href="favicon.ico">
      <link href="{{static_url("css/bootstrap.min.css")}}" rel="stylesheet">
@@ -27,12 +27,12 @@
                         <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
                             <i class="fa fa-reorder"></i>
                         </button>
-                        <a href="#" class="navbar-brand">Hplus</a>
+                        <a href="#" class="navbar-brand">Hackerl</a>
                     </div>
                     <div class="navbar-collapse collapse" id="navbar">
                         <ul class="nav navbar-nav">
                             <li class="active">
-                                <a aria-expanded="false" role="button" href="index.html"> 返回首页</a>
+                                <a aria-expanded="false" role="button" href="/"> 返回首页</a>
                             </li>
                             <li class="dropdown">
                                 <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> 菜单 <span class="caret"></span></a>
@@ -105,10 +105,10 @@
                             <div class="ibox float-e-margins">
                                 <div class="ibox-title">
                                     <span class="label label-success pull-right">月</span>
-                                    <h5>浏览量</h5>
+                                    <h5>总收入</h5>
                                 </div>
                                 <div class="ibox-content">
-                                    <h1 class="no-margins">386,200</h1>
+                                    <h1 class="no-margins">{{data['money']}}</h1>
                                     <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i>
                                     </div>
                                     <small>总计浏览量</small>
@@ -119,10 +119,10 @@
                             <div class="ibox float-e-margins">
                                 <div class="ibox-title">
                                     <span class="label label-info pull-right">年</span>
-                                    <h5>订单</h5>
+                                    <h5>订单数</h5>
                                 </div>
                                 <div class="ibox-content">
-                                    <h1 class="no-margins">80,800</h1>
+                                    <h1 class="no-margins">{{data['num']}}</h1>
                                     <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i>
                                     </div>
                                     <small>新订单</small>
@@ -297,7 +297,7 @@
                         <div class="col-lg-12">
                             <div class="ibox float-e-margins">
                                 <div class="ibox-title">
-                                    <h5>自定义响应表格</h5>
+                                    <h5>用户</h5>
                                     <div class="ibox-tools">
                                         <a class="collapse-link">
                                             <i class="fa fa-chevron-up"></i>
@@ -306,9 +306,9 @@
                                             <i class="fa fa-wrench"></i>
                                         </a>
                                         <ul class="dropdown-menu dropdown-user">
-                                            <li><a href="#">设置选项1</a>
+                                            <li><a href="#">有效用户</a>
                                             </li>
-                                            <li><a href="#">设置选项2</a>
+                                            <li><a href="#">过期用户</a>
                                             </li>
                                         </ul>
                                         <a class="close-link">
@@ -339,50 +339,27 @@
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr>
-                                                    <th>项目</th>
+                                                    <th>订单号</th>
                                                     <th>进度</th>
-                                                    <th>任务</th>
+                                                    <th>金额</th>
+                                                    <th>用户</th>
                                                     <th>日期</th>
                                                     <th>操作</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                {% for auth in auths %}
                                                 <tr>
-                                                    <td>米莫说｜MiMO Show</td>
-                                                    <td><span class="pie">0.52/1.561</span>
+                                                    <td>{{ auth.number }}</td>
+                                                    <td><span class="pie">{{ auth.percentage }}</span>
                                                     </td>
-                                                    <td>20%</td>
-                                                    <td>2014.11.11</td>
-                                                    <td><a href="table_basic.html#"><i class="fa fa-check text-navy"></i></a>
+                                                    <td>{{ auth.money }}</td>
+                                                    <td>{{ auth.username }}</td>
+                                                    <td>{{ auth.time }}</td>
+                                                    <td><a href="#"><i class="fa fa-check text-navy"></i></a>
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>商家与购物用户的交互试衣应用</td>
-                                                    <td><span class="pie">6,9</span>
-                                                    </td>
-                                                    <td>40%</td>
-                                                    <td>2014.11.11</td>
-                                                    <td><a href="table_basic.html#"><i class="fa fa-check text-navy"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>天狼---智能硬件项目</td>
-                                                    <td><span class="pie">3,1</span>
-                                                    </td>
-                                                    <td>75%</td>
-                                                    <td>2014.11.11</td>
-                                                    <td><a href="table_basic.html#"><i class="fa fa-check text-navy"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>线下超市+线上商城+物流配送互联系统</td>
-                                                    <td><span class="pie">4,9</span>
-                                                    </td>
-                                                    <td>18%</td>
-                                                    <td>2014.11.11</td>
-                                                    <td><a href="table_basic.html#"><i class="fa fa-check text-navy"></i></a>
-                                                    </td>
-                                                </tr>
+                                                {% end %}
                                             </tbody>
                                         </table>
                                     </div>
@@ -392,7 +369,83 @@
                         </div>
 
                     </div>
+<div class="row">
 
+                        <div class="col-lg-12">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>应用</h5>
+                                    <div class="ibox-tools">
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                            <i class="fa fa-wrench"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-user">
+                                            <li><a href="#">已更新</a>
+                                            </li>
+                                            <li><a href="#">未更新</a>
+                                            </li>
+                                        </ul>
+                                        <a class="close-link">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="ibox-content">
+                                    <div class="row">
+                                        <div class="col-sm-9 m-b-xs">
+                                            <div data-toggle="buttons" class="btn-group">
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" id="option1" name="options">天</label>
+                                                <label class="btn btn-sm btn-white active">
+                                                    <input type="radio" id="option2" name="options">周</label>
+                                                <label class="btn btn-sm btn-white">
+                                                    <input type="radio" id="option3" name="options">月</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <input type="text" placeholder="搜索" class="input-sm form-control"> <span class="input-group-btn">
+                                        <button type="button" class="btn btn-sm btn-primary">搜索</button> </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>应用名</th>
+                                                    <th>进度</th>
+                                                    <th>版本</th>
+                                                    <th>下载</th>
+                                                    <th>日期</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for app in apps %}
+                                                <tr>
+                                                    <td>{{ app.name }}</td>
+                                                    <td><span class="pie">1/2</span>
+                                                    </td>
+                                                    <td>{{ app.version }}</td>
+                                                    <td>{{ app.download }}</td>
+                                                    <td>{{ app.time }}</td>
+                                                    <td><a href="#"><i class="fa fa-check text-navy"></i></a>
+                                                    </td>
+                                                </tr>
+                                                {% end %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
             </div>

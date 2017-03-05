@@ -76,7 +76,7 @@ class BaseHandler(tornado.web.RequestHandler):
         else:
             return False
 
-#授权
+#主页
 class HomeHandler(BaseHandler):
     def get(self):
         self.render('index.html')
@@ -132,8 +132,8 @@ class AddAppHandler(BaseHandler):
 class ManageHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        result = Info.get_information(self.db)
-        self.render('admin.html')
+        apps, auths, data = Info.get_information(self.db)
+        self.render('admin.html',auths = auths, apps = apps, data = data)
 
 
 class LoginHandler(BaseHandler):
