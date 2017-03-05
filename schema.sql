@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS app;
 
 CREATE TABLE auth (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-    num VARCHAR(50) NOT NULL,
+    number VARCHAR(50) NOT NULL,
     money int(9) Default 0,
     auth_time int(9) Default 4,
     username text,

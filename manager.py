@@ -17,25 +17,22 @@ class Info(object):
 
     @classmethod
     def set_auth_status(cls, db, number, mac, username):
-        db.execute("UPDATE auth set username=%s, mac=%s, auth_time=auth_time-1 WHERE number=%s" % (username, mac, number))
+        db.execute('UPDATE auth set username="%s", mac="%s", auth_time=auth_time-1 WHERE number="%s"' % (username, mac, number))
 
     @classmethod
     def get_version(cls, db, app, version):
-        return db.query("SELECT * FROM app where name=%s" % app)
+        return db.get("SELECT * FROM app where name=%s" % app)
 
 
     @classmethod
     def auth(cls, db,number,mac,username):
-        result = db.query("SELECT * FROM auth where number=%s" % number)
+        result = db.get("SELECT * FROM auth where number=%s" % number)
         #验证部分
+        print result
         
-        
-        
-        
-        if result:
+        if result and result['auth_time'] > 0 and (not result['username'] or result['username'] == username):
             return True
-        else:
-            return False
+        return False
 
 
 class Manage(object):
@@ -46,6 +43,8 @@ class Manage(object):
 
             Info.set_auth_status(db,number,mac,username)
             return '加密密文'
+        else:
+            return '授权失败'
 
     @classmethod
     def updated(cls,db,app,version):

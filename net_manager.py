@@ -33,7 +33,7 @@ class Application(tornado.web.Application):
             static_path=os.path.join(os.path.dirname(__file__), 'static'),
             template_path=os.path.join(os.path.dirname(__file__), 'templates'),
             autoescape=None,
-            xsrf_cookies=True,
+            xsrf_cookies=False,
             cookie_secret='6de683f6e8f038f62863fe27a17573e5',
             login_url='/login',
         )
@@ -121,8 +121,8 @@ class SetAppHandler(BaseHandler):
 class ManageHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        result = Info.get_information()
-        self.render('admin.html',result = result)
+        result = Info.get_information(self.db)
+        self.render('admin.html')
 
 
 class LoginHandler(BaseHandler):
@@ -142,7 +142,6 @@ class AdminHandler(BaseHandler):
     def post(self):
         username = self.get_argument("username")
         password = self.get_argument("password")
-
         try:
             if self.validate(username) is None:
                 raise
