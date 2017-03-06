@@ -11,7 +11,6 @@ CREATE TABLE auth (
     money int(9) Default 0,
     auth_time int(9) Default 4,
     username text,
-    mac text,
     time DATETIME NOT NULL
 );
 
