@@ -22,19 +22,27 @@ class Info(object):
 
     @classmethod
     def set_auth_status(cls, db, id, number, money, username, auth_time):
-        db.execute('UPDATE auth set username="%s", money=%s, auth_time=%s, number="%s" WHERE id=%d' % (username, money, auth_time, number, id))
+        db.execute('UPDATE auth set username="%s", money=%s, auth_time=%s, number="%s" WHERE id=%s' % (username, money, auth_time, number, id))
 
     @classmethod
     def get_version(cls, db, app):
         return db.get('SELECT * FROM app where name="%s"' % app)
 
     @classmethod
-    def set_app_info(cls, db, app, version):
-        db.execute('UPDATE app set version=%f, description="%s", download="%s", time=CURRENT_TIMESTAMP() WHERE name="%s"' % (version, description, download, app))
+    def set_app_info(cls, db, app, version, description, download):
+        db.execute('UPDATE app set version=%s, description="%s", download="%s", time=CURRENT_TIMESTAMP() WHERE name="%s"' % (version, description, download, app))
     
     @classmethod
     def add_app_info(cls, db, app, version, description, download):
-        db.execute('insert into app (name, version, description, download, time) values("%s", "%s", "%s", "%s", CURRENT_TIMESTAMP())'%(app, version, description, download))
+        db.execute('insert into app (name, version, description, download, time) values("%s", %s, "%s", "%s", CURRENT_TIMESTAMP())'%(app, version, description, download))
+
+    @classmethod
+    def del_auth(cls, db, id):
+        db.execute('DELETE FROM auth WHERE id=%s' % id)
+    
+    @classmethod
+    def del_app(cls, db, id):
+        db.execute('DELETE FROM app WHERE id=%s' % id)
 
     @classmethod
     def auth(cls, db,number,mac,username):

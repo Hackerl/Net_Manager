@@ -24,6 +24,8 @@ class Application(tornado.web.Application):
             (r"/admin", ManageHandler),
             (r"/set_auth", SetAuthHandler),
             (r"/set_app", SetAppHandler),
+            (r"/del_auth", DelAuthHandler),
+            (r"/del_app", DelAppHandler),
             (r"/add_app", AddAppHandler),
             (r"/add_auth", AddAuthHandler),
             (r'/login', LoginHandler),
@@ -105,7 +107,7 @@ class AddAuthHandler(BaseHandler):
     def post(self):
         number = self.get_argument('number','')
         money = self.get_argument('money','0')
-        auth_time = self.get_argument('time','4')
+        auth_time = self.get_argument('auth_time','4')
         Info.add_auth_status(self.db,number,money,auth_time)
         self.write('ok')
 
@@ -117,7 +119,7 @@ class SetAuthHandler(BaseHandler):
         money = self.get_argument('money','30')
         auth_time = self.get_argument('auth_time','4')
         username = self.get_argument('username','')
-        Info.add_auth_status(self.db, id, number, money, username, auth_time)
+        Info.set_auth_status(self.db, id, number, money, username, auth_time)
         self.write('ok')
 
 #设置app信息                   
@@ -125,7 +127,7 @@ class SetAppHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
         app = self.get_argument('name','')
-        version = self.get_argument('version',0)
+        version = self.get_argument('version','0')
         description = self.get_argument('description','')
         download = self.get_argument('download','')
         Info.set_app_info(self.db, app, version, description, download)
@@ -135,10 +137,25 @@ class AddAppHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
         app = self.get_argument('name','')
-        version = self.get_argument('version',0)
+        version = self.get_argument('version','0')
         description = self.get_argument('description','')
         download = self.get_argument('download','')
         Info.add_app_info(self.db, app, version, description, download)
+
+
+#删除auth信息                   
+class DelAuthHandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self):
+        id = self.get_argument('id','')
+        Info.del_auth(self.db, id)
+
+#删除auth信息                   
+class DelAppHandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self):
+        id = self.get_argument('id','')
+        Info.del_app(self.db, id)
 
 #后台主页
 class ManageHandler(BaseHandler):
