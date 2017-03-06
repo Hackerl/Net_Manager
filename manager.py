@@ -14,16 +14,15 @@ class Info(object):
         data = {'money':db.get("SELECT sum(money) from auth")['sum(money)'],'num':db.get("select count(*) from auth")['count(*)']}
         for auth in auths:
             auth.percentage = '%s/%d' % (time.time() - time.mktime(auth.time.timetuple()),  86400*(30 if auth.money==30 else 60))
-        print auths
         return app, auths ,data
         
     @classmethod
     def add_auth_status(cls, db, number, money, auth_time):
-        db.execute('insert into auth (number, money, auth_time, time) values("%s", "%s", "%s", CURRENT_TIMESTAMP())'%(number, money, auth_time))
+        db.execute('insert into auth (number, money, auth_time, time) values("%s", %s, %s, CURRENT_TIMESTAMP())'%(number, money, auth_time))
 
     @classmethod
-    def set_auth_status(cls, db, number, mac, username, auth_time):
-        db.execute('UPDATE auth set username="%s", mac="%s", auth_time=%d WHERE number="%s"' % (username, mac, auth_time, number))
+    def set_auth_status(cls, db, id, number, money, username, auth_time):
+        db.execute('UPDATE auth set username="%s", money=%s, auth_time=%s, number="%s" WHERE id=%d' % (username, money, auth_time, number, id))
 
     @classmethod
     def get_version(cls, db, app):
@@ -43,7 +42,7 @@ class Info(object):
         #验证部分
         
         if result and result['auth_time'] > 0 and (not result['username'] or result['username'] == username):
-            Info.set_auth_status(db, number, mac, username, result['auth_time']-1)
+            Info.set_auth_status(db, result['id'], number, result['money'], username, result['auth_time']-1)
             return True
         return False
 

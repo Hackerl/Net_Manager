@@ -22,9 +22,10 @@ class Application(tornado.web.Application):
             (r'/authorization', AuthHandler),
             (r"/update", UpdateHandler),
             (r"/admin", ManageHandler),
+            (r"/set_auth", SetAuthHandler),
             (r"/set_app", SetAppHandler),
             (r"/add_app", AddAppHandler),
-            (r"/addauth", AddHandler),
+            (r"/add_auth", AddAuthHandler),
             (r'/login', LoginHandler),
             (r'/logout', LogoutHandler),
             (r'/admin_auth', AdminHandler),
@@ -99,13 +100,24 @@ class UpdateHandler(BaseHandler):
         self.write(result)
 
 #添加验证条目
-class AddHandler(BaseHandler):
+class AddAuthHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
         number = self.get_argument('number','')
-        money = self.get_argument('money',0)
-        time = self.get_argument('time',4)
-        Info.add_auth_status(self.db,number,money,time)
+        money = self.get_argument('money','0')
+        auth_time = self.get_argument('time','4')
+        Info.add_auth_status(self.db,number,money,auth_time)
+        self.write('ok')
+
+class SetAuthHandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self):
+        id = self.get_argument('id','')
+        number = self.get_argument('number','')
+        money = self.get_argument('money','30')
+        auth_time = self.get_argument('auth_time','4')
+        username = self.get_argument('username','')
+        Info.add_auth_status(self.db, id, number, money, username, auth_time)
         self.write('ok')
 
 #设置app信息                   
